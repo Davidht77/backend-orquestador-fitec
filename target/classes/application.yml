@@ -1,0 +1,105 @@
+jwt:
+  secret: ${JWT-KEY}
+
+app:
+  cors:
+    frontend-url: ${FRONTEND_URL:}
+
+spring:
+  application:
+    name: orquestador
+  cloud:
+    gateway:
+      httpclient:
+        # Intenta deshabilitar la expectativa de "100-continue" que a veces causa problemas con cuerpos POST
+        expect-continue-enabled: false
+
+      mvc:
+        routes:
+          # Ruta 1: Auth Service
+          - id: auth-service-route # ID único
+            uri: ${AUTH_URL:http://localhost:8081}
+            predicates:
+              - Path=/auth/**
+            # No hay filtros definidos para auth-route, lo cual está bien si no los necesitas.
+
+          # Ruta 2: Client Service
+          - id: client-service-route # ID único
+            uri: ${SPRINGBOOT_URL:http://localhost:8082}
+            predicates:
+              - Path=/client/**
+            filters:
+              - AddResponseHeader=X-Powered-By, FITEC Gateway Service
+
+          # Ruta 3: Payment Service
+          - id: payment-service-route # ID único
+            uri: ${SPRINGBOOT_URL:http://localhost:8082} # Asumiendo que es el mismo servicio que client
+            predicates:
+              - Path=/payment/**
+            filters:
+              - AddResponseHeader=X-Powered-By, FITEC Gateway Service
+
+          # Ruta 4: Plan Service
+          - id: plan-service-route # ID único
+            uri: ${SPRINGBOOT_URL:http://localhost:8082} # Asumiendo que es el mismo servicio que client
+            predicates:
+              - Path=/plan/**
+            filters:
+              - AddResponseHeader=X-Powered-By, FITEC Gateway Service
+
+          # Ruta 5: Employee Service (para /employees/**)
+          - id: employee-service-employees-route # ID único y descriptivo
+            uri: ${FASTAPI_URL:http://localhost:8000}
+            predicates:
+              - Path=/employees/**
+            filters:
+              - AddResponseHeader=X-Powered-By, FITEC Gateway Service
+
+          # Ruta 6: Sede Service (para /sede/**, apuntando al mismo FastAPI)
+          - id: employee-service-sede-route # ID único y descriptivo (asumiendo que /sede también va a FastAPI)
+            uri: ${FASTAPI_URL:http://localhost:8000}
+            predicates:
+              - Path=/sede/** # Cambiado a /sede/** para incluir sub-rutas
+
+            filters:
+              - AddResponseHeader=X-Powered-By, FITEC Gateway Service
+
+          # Ruta 7: NoSQL Service (FAQ)
+          - id: faq-service-route # ID único
+            uri: ${NESTJS_URL:http://localhost:3000}
+            predicates:
+              - Path=/faq/**
+            filters:
+              - AddResponseHeader=X-Powered-By, FITEC Gateway Service
+          # Ruta 8: S3 Service
+          - id: nosql-s3-service-route # ID único
+            uri: ${NESTJS_URL:http://localhost:3000}
+            predicates:
+              - Path=/s3/**
+            filters:
+              - AddResponseHeader=X-Powered-By, FITEC Gateway Service
+          # Ruta 9: Invitations Service
+          - id: nosql-invitations-service-route # ID único
+            uri: ${NESTJS_URL:http://localhost:3000}
+            predicates:
+              - Path=/invitations/**
+            filters:
+              - AddResponseHeader=X-Powered-By, FITEC Gateway Service
+          # Ruta 10: Feedback Service
+          - id: nosql-feedback-service-route # ID único
+            uri: ${NESTJS_URL:http://localhost:3000}
+            predicates:
+              - Path=/feedback/**
+            filters:
+              - AddResponseHeader=X-Powered-By, FITEC Gateway Service
+logging:
+  level:
+    # Niveles de logging que ya tenías (buenos para empezar)
+    org.springframework.security: DEBUG
+    org.springframework.security.oauth2.server.resource: TRACE
+    org.springframework.web.filter.CompositeFilter: DEBUG
+    org.springframework.web.servlet.DispatcherServlet: DEBUG
+    org.springframework.cloud.gateway.server.mvc: DEBUG # O TRACE para más detalle del Gateway
+
+    org.springframework.http.client: TRACE
+

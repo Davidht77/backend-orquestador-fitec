@@ -1,0 +1,152 @@
+openapi: 3.0.4
+info:
+  title: API Gateway Routes Documentation (Simulated from application.yml)
+  description: |
+    Esta especificación documenta las rutas de entrada disponibles a través
+    del Spring Cloud Gateway, basadas en la configuración del application.yml.
+  version: v1.0.0
+servers:
+- url: http://localhost:8080 # Reemplaza 8080 con el puerto real de tu Gateway si es diferente
+  description: URL del Spring Cloud Gateway
+
+paths:
+  # Rutas ruteadas al Auth Service (http://localhost:8081)
+  /auth/register/employee:
+    post:
+      tags:
+        - Auth Service (via Gateway)
+      summary: Endpoint de registro de empleado (ruteado por Gateway)
+      responses:
+        "200":
+          description: Respuesta genérica (detalles en el servicio backend)
+
+  /auth/register/client:
+    post:
+      tags:
+        - Auth Service (via Gateway)
+      summary: Endpoint de registro de cliente (ruteado por Gateway)
+      responses:
+        "200":
+          description: Respuesta genérica (detalles en el servicio backend)
+
+  /auth/login:
+    post:
+      tags:
+        - Auth Service (via Gateway)
+      summary: Endpoint de inicio de sesión (ruteado por Gateway)
+      responses:
+        "200":
+          description: Respuesta genérica (detalles en el servicio backend)
+
+  /auth/admin/invite-employee:
+    post:
+      tags:
+        - Auth Service (via Gateway)
+      summary: Endpoint de invitación de empleado (ruteado por Gateway)
+      responses:
+        "200":
+          description: Respuesta genérica (detalles en el servicio backend)
+
+  # Rutas ruteadas al Client/Payment/Plan Service (http://localhost:8082)
+  # Se representan como ejemplos bajo los prefijos definidos
+  /client/**:
+    get:
+      tags:
+        - SpringBoot Service (Client/Payment/Plan - via Gateway)
+      summary: Ejemplo de ruta bajo /client/ (ruteada por Gateway)
+      responses:
+        "200":
+          description: Respuesta genérica (detalles en el servicio backend)
+
+  /payment/**:
+    post:
+      tags:
+        - SpringBoot Service (Client/Payment/Plan - via Gateway)
+      summary: Ejemplo de ruta bajo /payment/ (ruteada por Gateway)
+      responses:
+        "200":
+          description: Respuesta genérica (detalles en el servicio backend)
+
+  /plan/**:
+    get:
+      tags:
+        - SpringBoot Service (Client/Payment/Plan - via Gateway)
+      summary: Ejemplo de ruta bajo /plan/ (ruteada por Gateway)
+      responses:
+        "200":
+          description: Respuesta genérica (detalles en el servicio backend)
+
+
+  # Rutas ruteadas al Employee/Sede Service (FastAPI - http://localhost:8000)
+  # Se representan como ejemplos bajo los prefijos definidos
+  /employees/**:
+    get:
+      tags:
+        - FastAPI Service (Employee/Sede - via Gateway)
+      summary: Ejemplo de ruta bajo /employees/ (ruteada por Gateway)
+      responses:
+        "200":
+          description: Respuesta genérica (detalles en el servicio backend)
+
+  /sede/**:
+    post:
+      tags:
+        - FastAPI Service (Employee/Sede - via Gateway)
+      summary: Ejemplo de ruta bajo /sede/ (ruteada por Gateway)
+      responses:
+        "200":
+          description: Respuesta genérica (detalles en el servicio backend)
+
+
+  # Rutas ruteadas al NoSQL Services (NestJS - http://localhost:3000)
+  # Se representan como ejemplos bajo los prefijos definidos
+  /faq/**:
+    get:
+      tags:
+        - NestJS Services (NoSQL - via Gateway)
+      summary: Ejemplo de ruta bajo /faq/ (ruteada por Gateway)
+      responses:
+        "200":
+          description: Respuesta genérica (detalles en el servicio backend)
+
+  /s3/**:
+    put: # Método común para subir a S3
+      tags:
+        - NestJS Services (NoSQL - via Gateway)
+      summary: Ejemplo de ruta bajo /s3/ (ruteada por Gateway)
+      responses:
+        "200":
+          description: Respuesta genérica (detalles en el servicio backend)
+
+  /invitations/**:
+    post:
+      tags:
+        - NestJS Services (NoSQL - via Gateway)
+      summary: Ejemplo de ruta bajo /invitations/ (ruteada por Gateway)
+      responses:
+        "200":
+          description: Respuesta genérica (detalles en el servicio backend)
+
+  /feedback/**:
+    post:
+      tags:
+        - NestJS Services (NoSQL - via Gateway)
+      summary: Ejemplo de ruta bajo /feedback/ (ruteada por Gateway)
+      responses:
+        "200":
+          description: Respuesta genérica (detalles en el servicio backend)
+
+components:
+  # No podemos inferir schemas de application.yml, así que esta sección está vacía.
+  schemas: {}
+
+  # Definición de Tags para agrupar en Swagger UI
+  tags:
+    - name: Auth Service (via Gateway)
+      description: Rutas ruteadas al Servicio de Autenticación
+    - name: SpringBoot Service (Client/Payment/Plan - via Gateway)
+      description: Rutas ruteadas a los Servicios de Cliente, Pago y Plan (mismo backend)
+    - name: FastAPI Service (Employee/Sede - via Gateway)
+      description: Rutas ruteadas al Servicio de Empleados y Sedes (FastAPI)
+    - name: NestJS Services (NoSQL - via Gateway)
+      description: Rutas ruteadas a los Servicios NoSQL (FAQ, S3, Invitaciones, Feedback - NestJS)
